@@ -31,7 +31,7 @@
     <li><a href="#project-structure">Project Structure</a></li>
     <li><a href="#database-and-persistence">Database and Persistence</a></li>
     <li><a href="#troubleshooting">Troubleshooting</a></li>
-    <li><a href="#credits">Credits</a></li>
+    <li><a href="#acknowledgments">Credits</a></li>
   </ol>
 </details>
 
@@ -154,8 +154,8 @@ When a person is deleted, detection records are preserved (setting the ID to NUL
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-<!-- CREDITS -->
-## Credits
+<!-- ACKNOWLEDGMENTS -->
+## Acknowledgments
 
 * [OpenCV](https://opencv.org/)
 * [DeepFace](https://github.com/serengil/deepface)
