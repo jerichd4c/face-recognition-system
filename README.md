@@ -1,195 +1,176 @@
-# Sistema de Reconocimiento Facial en Tiempo Real 📷🧠
+<a id="readme-top"></a>
 
-Aplicación en Python que permite registrar personas, reconocer rostros en tiempo real y analizar emociones usando OpenCV y DeepFace, con una interfaz web simple en Streamlit y persistencia en SQLite.
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <h3 align="center">Real-Time Facial Recognition System 📷🧠</h3>
 
-- Reconocimiento facial con embeddings (Facenet, ArcFace o VGG-Face)
-- Análisis de emociones (7 clases: angry, disgust, fear, happy, sad, surprise, neutral)
-- Ajustes finos para mejorar la detección de “disgust” y suavizado temporal de emociones
-- Reportes interactivos (gráficas, últimos eventos) y filtro por emoción
-- Administración: alta de personas y eliminación segura (preserva historial)
+  <p align="center">
+    A Python application for registering people, recognizing faces in real-time, and analyzing emotions using OpenCV and DeepFace, with a simple Streamlit web interface and SQLite persistence.
+  </p>
+</div>
 
----
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#project-structure">Project Structure</a></li>
+    <li><a href="#database-and-persistence">Database and Persistence</a></li>
+    <li><a href="#troubleshooting">Troubleshooting</a></li>
+    <li><a href="#credits">Credits</a></li>
+  </ol>
+</details>
 
-## Requisitos previos ⚙️
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-- Python 3.10 o superior
-- Windows recomendado (probado con cámara local). También funciona en otros SO con Python + OpenCV.
-- Cámara web disponible
+This project is a comprehensive solution for real-time facial recognition and emotion analysis. It leverages advanced deep learning models to identify registered individuals and determine their emotional state.
 
-Dependencias se instalan desde `requirements.txt`.
+Key Features:
+- **Facial Recognition** using embeddings (Facenet, ArcFace, or VGG-Face).
+- **Emotion Analysis** (7 classes: angry, disgust, fear, happy, sad, surprise, neutral).
+- **Fine-tuning** to improve "disgust" detection and temporal smoothing.
+- **Interactive Reports** with charts and emotion-based filtering.
+- **Full Administration** of people and detection logs.
 
----
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Instalación 📦
+### Built With
 
-En PowerShell (Windows):
+* [![Python][Python-shield]][Python-url]
+* [![OpenCV][OpenCV-shield]][OpenCV-url]
+* [![Streamlit][Streamlit-shield]][Streamlit-url]
+* [![SQLite][SQLite-shield]][SQLite-url]
+* [![DeepFace][DeepFace-shield]][DeepFace-url]
 
-```powershell
-# 1) Clonar el repositorio
-# git clone https://github.com/<tu-usuario>/<repo>.git
-# cd <repo>
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-# 2) Crear y activar entorno virtual (opcional pero recomendado)
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
+<!-- GETTING STARTED -->
+## Getting Started
 
-# 3) Instalar dependencias
-pip install -r requirements.txt
-```
+### Prerequisites
 
-Notas:
-- DeepFace descargará automáticamente algunos modelos la primera vez que se ejecuta (puede tardar varios minutos).
-- Si OpenCV reporta errores de DLL en Windows, instala el "Microsoft Visual C++ Redistributable".
+* **Python 3.10** or higher.
+* **Windows** recommended (tested with local camera).
+* **Webcam** available.
 
----
+### Installation
 
-## Puesta en marcha rápida 🚀
+1. Clone the repository
+   ```sh
+   git clone https://github.com/jerichd4c/facial-recognition-cv.git
+   cd facial-recognition-cv
+   ```
+2. Create and activate virtual environment
+   ```powershell
+   python -m venv .venv
+   .\.venv\Scripts\Activate.ps1
+   ```
+3. Install dependencies
+   ```sh
+   pip install -r requirements.txt
+   ```
 
-Ejecuta la interfaz web:
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-```powershell
+<!-- USAGE EXAMPLES -->
+## Usage
+
+### Web Interface (Streamlit)
+
+Run the interactive interface for registration, detection, and reports:
+```sh
 streamlit run app.py
 ```
 
-La app abre una interfaz con tres secciones en la barra lateral:
+The application features three main sections:
+1. **Registration:** Face capture and person enrollment.
+2. **Detection:** Native OpenCV window for real-time recognition. (Press `q` to close).
+3. **Reports:** Visualization of statistics and recent detections.
 
-1. Registro: alta de personas y captura de rostros (vía cámara del navegador) para generar embeddings.
-2. Detección: lanza una ventana nativa (OpenCV) con reconocimiento en tiempo real y análisis de emociones.
-3. Reportes: estadísticas, gráficas por emoción y últimos eventos (con filtro por emoción).
+### Command Line Interface (CLI)
 
-Para cerrar la ventana nativa de detección, presiona la tecla `q`.
+You can also use the native engine directly:
 
----
-
-## Flujo de trabajo 🧭
-
-### 1) Registrar personas
-- Completa Nombre, Apellido y Email.
-- Usa la cámara para tomar varias capturas (se recomienda ≥ 5, con buena iluminación y rostro centrado).
-- El sistema detecta y recorta el rostro más grande de cada captura y guarda el embedding en la tabla `Rostro`.
-
-Administración:
-- Puedes eliminar una persona desde la misma página. La eliminación borra sus embeddings y deja en `NULL` el `id_persona` de detecciones históricas, preservando el historial.
-
-### 2) Detección en tiempo real
-- Configura los parámetros (umbral de reconocimiento, intervalos, backends, modelos, resolución, FPS, etc.).
-- Pulsa “Iniciar” para abrir la ventana nativa. Se verán:
-  - Caja del rostro, nombre si hay match y confianza de reconocimiento
-  - Emoción dominante y confianza
-  - Top-3 emociones (ayuda para calibración)
-  - FPS actual
-- Pulsa “Detener” o cierra con `q`.
-
-Calibraciones de emoción importantes:
-- Ganancia de “disgust” (por defecto 1.6) para mejorar su sensibilidad.
-- Suavizado temporal (ventana en frames) para reducir parpadeo.
-- Balanceo por prior (opcional) para evitar que una emoción quede subrepresentada.
-
-### 3) Reportes
-- Métricas generales (personas registradas, detecciones del día, emoción predominante, tasa de reconocimientos confiables).
-- Gráfica de distribución de emociones por persona.
-- Últimas detecciones (aplica filtro por emoción si eliges una).
-
----
-
-## Uso por línea de comandos (opcional) 🖥️
-
-Además de la UI, puedes usar el script nativo `camera_local.py`.
-
-### Registrar desde CLI
-
+**Register:**
 ```powershell
-python camera_local.py register --camera 0 --nombre "Juan" --apellido "Pérez" --email "juan@example.com"
+python camera_local.py register --camera 0 --nombre "Firstname" --apellido "Lastname" --email "email@example.com"
 ```
 
-Opciones útiles:
-- `--person-id <id>`: agrega capturas a una persona existente.
-- `--duplicate-threshold 0.8`: umbral de similitud para advertir duplicados.
-- `--force`: guarda aunque parezca duplicado.
-
-Presiona `c` para capturar y `q` para salir (mínimo recomendado: 5 capturas).
-
-### Detectar desde CLI
-
+**Detect:**
 ```powershell
-python camera_local.py detect --camera 0 --threshold 0.6 --infer-interval-ms 500
+python camera_local.py detect --camera 0 --threshold 0.6
 ```
 
-Parámetros importantes (resumen):
-- Reconocimiento:
-  - `--threshold`: similitud coseno mínima para considerar un match.
-  - `--embed-model`: `ArcFace`, `Facenet` (default), `VGG-Face`.
-  - `--detector-backend`: `opencv`, `opencv-dnn`, `retinaface`, `mediapipe`.
-- Emociones:
-  - `--no-emotion`: deshabilita emociones para máximo FPS.
-  - `--emotion-backend`: `opencv`, `retinaface`, `mediapipe`, `skip`.
-  - `--emotion-interval-ms`: cada cuánto recalcular emociones.
-  - `--emotion-scale`: upscale del recorte de emociones (mejor detalle).
-  - `--crop-padding`: padding alrededor del rostro para emociones.
-  - `--emo-disgust-gain`: ganancia a “disgust” (default 1.6).
-  - `--emo-smooth-frames`: suavizado temporal (frames).
-  - `--emo-balance`, `--emo-balance-strength`, `--emo-balance-alpha`.
-- Rendimiento:
-  - `--frame-width`, `--frame-height`: resolución de la cámara.
-  - `--detect-scale` y `--scale`: aceleran detección / embeddings.
-  - `--force-mjpg`: reduce carga CPU en algunos drivers.
-  - `--target-fps`: intenta fijar FPS.
-  - `--box-smooth-alpha`: suavizado exponencial de la caja.
-  - `--min-log-interval-ms`: limita frecuencia de escritura a DB.
+_For more details on CLI parameters, check the script help: `python camera_local.py --help`._
 
-> Tip: Para usar `opencv-dnn` necesitas colocar los archivos del modelo Caffe en `./models`:
-> - `deploy.prototxt`
-> - `res10_300x300_ssd_iter_140000.caffemodel`
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
----
+<!-- PROJECT STRUCTURE -->
+## Project Structure
 
-## Base de datos y persistencia 🗄️
-
-- Archivo SQLite: `facial_recognition.db` en la raíz del proyecto.
-- Tablas principales:
-  - `Persona(id, nombre, apellido, email, fecha_registro_timestamp)`
-  - `Rostro(id, id_persona, rostro BLOB)` (embeddings)
-  - `Deteccion(id, id_persona NULL, recog_confianza, emocion, emocion_confianza, timestamp)`
-  - `DeteccionEmocionDetalle(id, id_deteccion, emocion, confianza)` (distribución completa por evento)
-- Migraciones básicas se realizan automáticamente si vienes de un esquema anterior.
-- Al eliminar una persona:
-  - Se borran sus embeddings en `Rostro`.
-  - Se pone `id_persona = NULL` en `Deteccion` para conservar el historial.
-
----
-
-## Ajustes de rendimiento y calidad ⚡
-
-- Aumentar resolución mejora la calidad de recortes, pero reduce FPS.
-- `--force-mjpg` y `--target-fps` pueden reducir latencia en Windows.
-- Mantén buena iluminación y encuadre para mejores embeddings y emociones.
-- “Disgust” suele infradetectarse: usa la ganancia y, si es necesario, incrementa suavizado/balanceo.
-
----
-
-## Solución de problemas 🧩
-
-- No abre la cámara: revisa el índice (`--camera`), permisos del SO y que otra app no la esté usando.
-- Ventana se cierra inmediatamente: mira la consola para mensajes (DLLs, permisos, drivers).
-- Errores DeepFace al inicio: la primera vez descarga pesos; espera a que termine.
-- Emojis/acentos extraños en consola: usa PowerShell con UTF-8 o evita caracteres especiales.
-
----
-
-## Estructura del proyecto 📁
-
-```
-app.py                # Interfaz Streamlit (Registro, Detección, Reportes)
-camera_local.py       # Motor nativo (OpenCV/DeepFace) y CLI
-requirements.txt      # Dependencias del proyecto
-facial_recognition.db # (se crea al ejecutar) Base de datos SQLite
-models/               # (opcional) Modelos Caffe para opencv-dnn
+```text
+app.py                # Streamlit interface (Registration, Detection, Reports)
+camera_local.py       # Native engine (OpenCV/DeepFace) and CLI
+requirements.txt      # Project dependencies
+facial_recognition.db # SQLite database (created upon execution)
+models/               # Caffe models for opencv-dnn (optional)
 ```
 
----
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Créditos 🙌
+<!-- DATABASE -->
+## Database and Persistence
 
-- [OpenCV](https://opencv.org/) para video y visión por computador
-- [DeepFace](https://github.com/serengil/deepface) para embeddings y emociones
-- [Streamlit](https://streamlit.io/) para la interfaz web
+The system uses **SQLite** (`facial_recognition.db`) to store:
+- Person information.
+- Face embeddings.
+- Detection history with detailed emotion data.
+
+When a person is deleted, detection records are preserved (setting the ID to NULL) to maintain statistical integrity.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- TROUBLESHOOTING -->
+## Troubleshooting
+
+- **Camera not detected:** Check the camera index (`--camera`) and system permissions.
+- **DeepFace errors:** The first run downloads model weights; this may take several minutes.
+- **Low performance:** Try reducing resolution or increasing `infer-interval-ms`.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- CREDITS -->
+## Credits
+
+* [OpenCV](https://opencv.org/)
+* [DeepFace](https://github.com/serengil/deepface)
+* [Streamlit](https://streamlit.io/)
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+<!-- MARKDOWN LINKS & IMAGES -->
+[Python-shield]: https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54
+[Python-url]: https://www.python.org/
+[OpenCV-shield]: https://img.shields.io/badge/opencv-%23white.svg?style=for-the-badge&logo=opencv&logoColor=white&color=5C3EE8
+[OpenCV-url]: https://opencv.org/
+[Streamlit-shield]: https://img.shields.io/badge/streamlit-%23FE4B4B.svg?style=for-the-badge&logo=streamlit&logoColor=white
+[Streamlit-url]: https://streamlit.io/
+[SQLite-shield]: https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white
+[SQLite-url]: https://www.sqlite.org/
+[DeepFace-shield]: https://img.shields.io/badge/DeepFace-AI-blue?style=for-the-badge
+[DeepFace-url]: https://github.com/serengil/deepface
