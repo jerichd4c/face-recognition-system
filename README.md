@@ -1,7 +1,5 @@
 <a id="readme-top"></a>
 
-<!-- PROJECT LOGO -->
-<br />
 <div align="center">
   <h3 align="center">Real-Time Facial Recognition System 📷🧠</h3>
 
