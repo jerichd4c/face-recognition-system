@@ -1,7 +1,7 @@
 <a id="readme-top"></a>
 
 <div align="center">
-  <h3 align="center">Real-Time Facial Recognition System 📷🧠</h3>
+  <h3 align="center">Real-Time Face Recognition System </h3>
 
   <p align="center">
     A Python application for registering people, recognizing faces in real-time, and analyzing emotions using OpenCV and DeepFace, with a simple Streamlit web interface and SQLite persistence.
