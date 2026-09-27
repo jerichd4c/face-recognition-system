@@ -78,7 +78,7 @@ Key Features:
 
 1. Clone the repository
    ```sh
-   git clone https://github.com/jerichd4c/facial-recognition-cv.git
+   git clone https://github.com/jerichd4c/face-recognition-sistem.git
    cd facial-recognition-cv
    ```
 2. Create and activate virtual environment
